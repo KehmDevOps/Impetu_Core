@@ -32,6 +32,9 @@ export class User {
   @Column({ type: 'bit', default: 1 })
   status!: boolean;
 
+  @Column({ type: 'decimal'})
+  salary!: number;
+
   @ManyToOne(() => Role, (role) => role.id, { eager: false })
   @JoinColumn({ name: 'role_id' })
   role!: Role;

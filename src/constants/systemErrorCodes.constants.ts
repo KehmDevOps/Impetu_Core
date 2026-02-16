@@ -4,6 +4,7 @@ export const SystemErrorCodes = {
   UserInvalid: 'UserInvalid',
   UserInactive: 'InactiveUser',
   UserHasInvalidRole: 'UserInvalidRole',
+  InvalidRole: 'InvalidRole',
   UserNotFoundInRequest: 'UserNotFoundInRequest',
   Unauthorized: 'Unauthorized',
 }
