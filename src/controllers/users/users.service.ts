@@ -13,6 +13,10 @@ import * as crypto from 'crypto';
 import { GenericResponse } from '../../dtos/responses/generic/generic.response';
 import { RolesService } from '../../services/roles/roles.service';
 import { Role } from '../../domain/roles.entity';
+import { PageableResponse } from '../../dtos/responses/pageable-response';
+import { Order } from '../../enums/order.enum';
+import { ObjectMapper } from '../../helpers/object-mapper.helper';
+import { UserQueryTemplates } from '../../helpers/query-templates/user.query-template';
 
 @Injectable()
 export class UsersService {
@@ -30,15 +34,28 @@ export class UsersService {
     return await this.userRepository.findOne(query);
   }
 
-  public async findAll(): Promise<UserResponse[]> {
-    const users: User[] = await this.userRepository.find({
-      relations: {
-        role: true,
-      }
-    });
+  public async findUsersByFilter(page: number, limit: number, order: string, filter: string): Promise<PageableResponse> {
+    const filterParam = `%${filter}%`;
+    const orderDirection = order ? Order[order] : Order.DESC;
+    const offset = (page - 1) * limit;
 
-    return plainToInstance(UserResponse, users, { excludeExtraneousValues: true });
+    const results = await this.userRepository.query(
+      UserQueryTemplates.findUsersByFilter(orderDirection),
+      [filterParam, offset, limit]
+    );
+
+    if (results.length === 0) {
+      return new PageableResponse([], 0, 0, Number(page));
+    }
+
+    const total = parseInt(results[0].total, 10);
+    const totalPages = Math.ceil(total / limit);
+
+    const usersResponse: UserResponse[] = ObjectMapper.toUserResponseList(results);
+
+    return new PageableResponse(usersResponse, total, totalPages, Number(page));
   }
+
 
   public async findUser(id: number){
     const user: User | null = await this.userRepository.findOne({

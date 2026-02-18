@@ -8,5 +8,7 @@ export const SystemErrorMessages = {
   UserCreated: 'User created successfully',
   InvalidRole: 'User was not created, invalid role',
   Unauthorized: 'The user was not authorized',
-  JwtSecretNotFound: 'JWT secret not configured (env: JWT or config jwt.secret)'
-}
+  JwtSecretNotFound: 'JWT secret not configured (env: JWT or config jwt.secret)',
+  PageNotValid: 'Param page is not valid',
+  LimitNotValid: 'Param limit is not valid',
+};
