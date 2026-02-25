@@ -22,7 +22,7 @@ export class UserRoleGuard implements CanActivate {
 
     const validRoles: string[] = this.reflector.get(SystemConstants.META_ROLES, context.getHandler());
     const request = context.switchToHttp().getRequest();
-    
+
     if(!request.user){
       throw new InternalServerErrorException(SystemErrorMessages.UserNotFoundInRequest,SystemErrorCodes.UserNotFoundInRequest);
     }

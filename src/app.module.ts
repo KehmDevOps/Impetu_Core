@@ -2,13 +2,14 @@ import { Module } from '@nestjs/common';
 import { EnvConfiguration } from './environments/.env';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { RolesModule } from './services/roles/roles.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SystemConstants } from './constants/system.constants';
 import { CatalogModule } from './controllers/catalog/catalog.module';
 import { UsersModule } from './controllers/users/users.module';
 import { AuthModule } from './controllers/auth/auth.module';
+import { QuotesModule } from './controllers/quotes/quotes.module';
+import { MembersModule } from './controllers/members/members.module';
 
 @Module({
   imports: [
@@ -51,10 +52,11 @@ import { AuthModule } from './controllers/auth/auth.module';
         };
       },
     }),
-    RolesModule,
+    AuthModule,
     CatalogModule,
+    MembersModule,
+    QuotesModule,
     UsersModule,
-    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

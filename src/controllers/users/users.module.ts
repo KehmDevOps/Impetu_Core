@@ -5,9 +5,11 @@ import { SystemConstants } from '../../constants/system.constants';
 import { UsersController } from './users.controller';
 import { User } from '../../domain/user.entity';
 import { RolesModule } from '../../services/roles/roles.module';
+import { EvolutionModule } from '../../services/evolution/evolution.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User], SystemConstants.IMPETU_DB), RolesModule],
+  imports: [
+    TypeOrmModule.forFeature([User], SystemConstants.IMPETU_DB),RolesModule],
   providers: [UsersService],
   exports: [UsersService],
   controllers: [UsersController],

@@ -7,4 +7,8 @@ export const SystemErrorCodes = {
   InvalidRole: 'InvalidRole',
   UserNotFoundInRequest: 'UserNotFoundInRequest',
   Unauthorized: 'Unauthorized',
-}
+  DisciplineNotFound: 'DisciplineNotFound',
+  MembershipDetailsNotFound: 'MembershipDetailsNotFound',
+  MembershipStatusNotFound: 'MembershipStatusNotFound'
+
+};

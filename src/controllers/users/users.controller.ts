@@ -5,26 +5,28 @@ import { Auth } from '../../decorators/auth.decorator';
 import { ValidRoles } from '../../enums/valid-roles.enum';
 import { UserRequest } from '../../dtos/requests/user.request';
 import { PaginationOptions } from '../../dtos/requests/pagination-options';
+import { GenericResponse } from '../../dtos/responses/generic/generic.response';
+import { PageableResponse } from '../../dtos/responses/pageable-response';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get('list')
+  @Get()
   @Auth(ValidRoles.admin)
-  async findAll(@Query() query: PaginationOptions): Promise<any> {
+  async findAll(@Query() query: PaginationOptions): Promise<PageableResponse> {
     return await this.usersService.findUsersByFilter(query.page, query.limit, query.order, query.filter);
   }
 
   @Get(':id')
-  @Auth()
+  @Auth(ValidRoles.admin)
   async findOne(@Param('id') id: number): Promise<UserResponse> {
     return await this.usersService.findUser(id);
   }
 
   @Post()
   @Auth(ValidRoles.admin)
-  public async createUser(@Body() body: UserRequest){
+  public async createUser(@Body() body: UserRequest): Promise<GenericResponse> {
     return await this.usersService.createUser(body);
   }
 }

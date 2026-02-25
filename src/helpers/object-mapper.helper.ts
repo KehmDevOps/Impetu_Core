@@ -1,5 +1,7 @@
 import { plainToInstance } from 'class-transformer';
 import { UserResponse } from '../dtos/responses/user/user.response';
+import { MembershipDetails } from '../domain/membership-details.entity';
+import { NewMemberQuoteResponse } from '../dtos/responses/new-member-quote.response';
 
 export class ObjectMapper {
 
@@ -19,6 +21,19 @@ export class ObjectMapper {
     }));
 
     return plainToInstance(UserResponse, mappedResults, { excludeExtraneousValues: true });
+  }
+
+  static toNewMemberQuote(details: MembershipDetails, discount?: number): NewMemberQuoteResponse{
+    const response = new NewMemberQuoteResponse();
+    if (!discount) {
+      response.totalAmount = details.price;
+      response.totalDiscount = 0;
+      return response;
+    }
+
+    response.totalDiscount = discount;
+    response.totalAmount = details.price - discount;
+    return response;
   }
 }
 

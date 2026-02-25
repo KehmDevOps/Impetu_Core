@@ -11,4 +11,7 @@ export const SystemErrorMessages = {
   JwtSecretNotFound: 'JWT secret not configured (env: JWT or config jwt.secret)',
   PageNotValid: 'Param page is not valid',
   LimitNotValid: 'Param limit is not valid',
+  DisciplineNotFound: 'Discipline was not found',
+  MembershipDetailsNotFound: 'Membership Details not found by provided Identifier.',
+  MembershipStatusNotFound: 'MembershipStatus not found by provided name or identifier',
 };

@@ -23,7 +23,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User, SystemConstants.IMPETU_DB)
     private readonly userRepository: Repository<User>,
-    private readonly roleService: RolesService
+    private readonly roleService: RolesService,
   ) {}
 
   public async find(query: QueryI<User>): Promise<User[]> {
@@ -48,8 +48,8 @@ export class UsersService {
       return new PageableResponse([], 0, 0, Number(page));
     }
 
-    const total = parseInt(results[0].total, 10);
-    const totalPages = Math.ceil(total / limit);
+    const total: number = parseInt(results[0].total, 10);
+    const totalPages: number = Math.ceil(total / limit);
 
     const usersResponse: UserResponse[] = ObjectMapper.toUserResponseList(results);
 
@@ -57,7 +57,7 @@ export class UsersService {
   }
 
 
-  public async findUser(id: number){
+  public async findUser(id: number): Promise<UserResponse> {
     const user: User | null = await this.userRepository.findOne({
       where: { id: id },
       relations: {
@@ -72,7 +72,7 @@ export class UsersService {
     return plainToInstance(UserResponse, user, { excludeExtraneousValues: true });
   }
 
-  public async createUser(request: UserRequest){
+  public async createUser(request: UserRequest): Promise<GenericResponse> {
     const role: Role | null = await this.roleService.findOne({ where: { id: request.roleId, status: true } });
 
     if (!role) {
