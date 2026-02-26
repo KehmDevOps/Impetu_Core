@@ -44,7 +44,6 @@ export class EvolutionService {
     const base64Image: string = await QrGeneratorHelper.generateQrBase64(accessCode);
     const cleanBase64: string = base64Image.replace(/^data:image\/[a-z]+;base64,/, '');
     const internalDelay: number = DelayCalculatorHelper.calculateDelay(caption);
-    console.log('message will send in', internalDelay, ' ms');
     const body = {
       number: SystemConstants.PHONE_BASE + number,
       mediatype: 'image',

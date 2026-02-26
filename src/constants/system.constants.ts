@@ -6,5 +6,10 @@ export const SystemConstants = {
     GYM_BOX: ['VISITA GYM', 'SEMANA GYM', 'CLASE BOX'],
   },
   PHONE_BASE: '521',
-  NO_PROMOTION: 'NINGUNA'
+  NO_PROMOTION: 'NINGUNA',
+  DISCIPLINES: {
+    GYM: 'GYM',
+    BOX: 'BOX',
+    BOX_GYM: 'BOX + GYM',
+  }
 }
