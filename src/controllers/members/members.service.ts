@@ -62,7 +62,17 @@ export class MembersService {
   private sendQR(member: Members): void{
     const message: string = TemplateMessages.WELCOME(member.firstName, member.gender);
     this.evolutionService.sendWhatsAppImage(member.personalPhone, message, member.token)
-      .then((response: any): void => {})
-      .catch((error: any): void => {});
+      .then((response: any): void => {
+        if(response.error){
+          console.log('Error in response');
+          return;
+        }
+
+        console.log('Message send successfully');
+      })
+      .catch((error: any): void => {
+        console.log('Error in catch');
+        console.log(error, null, 2);
+      });
   }
 }
