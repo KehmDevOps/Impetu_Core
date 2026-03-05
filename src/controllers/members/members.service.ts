@@ -21,6 +21,11 @@ import { PaymentsService } from '../../services/payments/payments.service';
 import { PaymentHelper } from '../../helpers/payment.helper';
 import { PaymentI } from '../../interfaces/models/payment.interface';
 import { Payments } from '../../domain/payments.entity';
+import { Order } from '../../enums/order.enum';
+import { UserQueryTemplates } from '../../helpers/query-templates/user.query-template';
+import { PageableResponse } from '../../dtos/responses/pageable-response';
+import { MembersByFilterResponse } from '../../dtos/responses/members/members-by-filter.response';
+import { ObjectMapper } from '../../helpers/object-mapper.helper';
 
 @Injectable()
 export class MembersService {
@@ -100,6 +105,27 @@ export class MembersService {
     await this.paymentsService.save(payment);
 
     this.sendQR(newMember);
+  }
+
+  public async findMembersByFilter(page: number, limit: number, order: string, filter: string){
+    const filterParam = `%${filter}%`;
+    const orderDirection: any = order ? Order[order] : Order.DESC;
+    const offset: number = (page - 1) * limit;
+
+    const result: any = await this.membersRepository.query(
+      UserQueryTemplates.findMembersByFilter(orderDirection),
+      [filterParam, offset, limit]
+    );
+
+    if (result.length === 0) {
+      return new PageableResponse([], 0, 0, Number(page));
+    }
+
+    const total: number = parseInt(result[0].total, 10);
+    const totalPages: number = Math.ceil(total / limit);
+    const response: MembersByFilterResponse[] = ObjectMapper.toListMembersResponse(result);
+
+    return new PageableResponse(response, total, totalPages, Number(page));
   }
 
   private sendQR(member: Members): void{
