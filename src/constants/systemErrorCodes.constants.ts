@@ -9,6 +9,8 @@ export const SystemErrorCodes = {
   Unauthorized: 'Unauthorized',
   DisciplineNotFound: 'DisciplineNotFound',
   MembershipDetailsNotFound: 'MembershipDetailsNotFound',
-  MembershipStatusNotFound: 'MembershipStatusNotFound'
-
+  MembershipStatusNotFound: 'MembershipStatusNotFound',
+  MemberNotFound: 'MemberNotFound',
+  InvalidDateFormat: 'InvalidDateFormat',
+  InvalidGeneratedDate: 'InvalidGeneratedDate'
 };

@@ -22,10 +22,11 @@ import { PaymentHelper } from '../../helpers/payment.helper';
 import { PaymentI } from '../../interfaces/models/payment.interface';
 import { Payments } from '../../domain/payments.entity';
 import { Order } from '../../enums/order.enum';
-import { UserQueryTemplates } from '../../helpers/query-templates/user.query-template';
 import { PageableResponse } from '../../dtos/responses/pageable-response';
 import { MembersByFilterResponse } from '../../dtos/responses/members/members-by-filter.response';
 import { ObjectMapper } from '../../helpers/object-mapper.helper';
+import { MembersQueryTemplates } from '../../helpers/query-templates/members-query.template';
+import { FullMemberProfileResponse } from '../../dtos/responses/members/full-profile/full-member-profile.response';
 
 @Injectable()
 export class MembersService {
@@ -109,23 +110,37 @@ export class MembersService {
 
   public async findMembersByFilter(page: number, limit: number, order: string, filter: string){
     const filterParam = `%${filter}%`;
-    const orderDirection: any = order ? Order[order] : Order.DESC;
+    const orderDirection: Order =
+      Order[order as keyof typeof Order] ?? Order.DESC;
     const offset: number = (page - 1) * limit;
 
     const result: any = await this.membersRepository.query(
-      UserQueryTemplates.findMembersByFilter(orderDirection),
+      MembersQueryTemplates.findMembersByFilterWithTotal(orderDirection),
       [filterParam, offset, limit]
     );
 
     if (result.length === 0) {
-      return new PageableResponse([], 0, 0, Number(page));
+      return new PageableResponse([], 0, 0, page);
     }
 
     const total: number = parseInt(result[0].total, 10);
     const totalPages: number = Math.ceil(total / limit);
-    const response: MembersByFilterResponse[] = ObjectMapper.toListMembersResponse(result);
+    const response: MembersByFilterResponse[] =
+      ObjectMapper.toListMembersResponse(result);
 
-    return new PageableResponse(response, total, totalPages, Number(page));
+    return new PageableResponse(response, total, totalPages, page);
+  }
+
+  async getFullMemberProfile(id: number): Promise<FullMemberProfileResponse> {
+    const memberData = await this.membersRepository.query(MembersQueryTemplates.getFullMemberProfile(id));
+
+    if (!memberData.length) {
+      throw new NotFoundException(SystemErrorMessages.MemberNotFound, SystemErrorCodes.MemberNotFound);
+    }
+
+    const recentPayments = await this.membersRepository.query(MembersQueryTemplates.getRecentPayments(id));
+
+    return ObjectMapper.formatFullMemberProfile(memberData[0], recentPayments);
   }
 
   private sendQR(member: Members): void{

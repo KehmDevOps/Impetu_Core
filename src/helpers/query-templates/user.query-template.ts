@@ -26,26 +26,5 @@ export class UserQueryTemplates {
       OFFSET @1 ROWS FETCH NEXT @2 ROWS ONLY
     `;
   }
-
-  static findMembersByFilter(orderBy: string): string {
-    return `
-      SELECT
-        m.id,
-        m.first_name,
-        m.last_name,
-        m.sur_name,
-        d.name,
-        md.description,
-        COUNT(*) OVER() AS total
-      FROM members m
-             LEFT JOIN membership_details md ON m.membership_details_id = md.id
-             LEFT JOIN discipline d ON md.discipline_id = d.id
-      WHERE TRANSLATE(CONCAT(m.first_name, ' ', m.last_name), 'ÁÉÍÓÚáéíóú', 'aeiouaeiou') LIKE TRANSLATE(@0, 'ÁÉÍÓÚáéíóú', 'aeiouaeiou') OR
-        CAST(m.id AS VARCHAR) LIKE @0 OR
-        m.personal_phone LIKE @0
-      ORDER BY m.id ${orderBy}
-      OFFSET @1 ROWS FETCH NEXT @2 ROWS ONLY
-  `;
-  }
 }
 

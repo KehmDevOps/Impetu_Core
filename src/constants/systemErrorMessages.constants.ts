@@ -14,4 +14,7 @@ export const SystemErrorMessages = {
   DisciplineNotFound: 'Discipline was not found',
   MembershipDetailsNotFound: 'Membership Details not found by provided Identifier.',
   MembershipStatusNotFound: 'MembershipStatus not found by provided name or identifier',
+  MemberNotFound: 'Selected member was not found by provided identifier',
+  InvalidDateFormat: 'Invalid date format. Expected DD/MM/YYYY',
+  InvalidGeneratedDate: 'Generated date was generated with errors'
 };
