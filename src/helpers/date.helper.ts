@@ -1,10 +1,12 @@
 import { BadRequestException } from '@nestjs/common';
+import { SystemErrorMessages } from '../constants/systemErrorMessages.constants';
+import { SystemErrorCodes } from '../constants/systemErrorCodes.constants';
 
 export class DateHelper {
   static parseDDMMYYYY(dateString: string): Date {
     const parts: string[] = dateString.split('/');
     if (parts.length !== 3) {
-      throw new BadRequestException('Invalid date format. Expected DD/MM/YYYY', 'InvalidDateFormat');
+      throw new BadRequestException(SystemErrorMessages.InvalidDateFormat, SystemErrorCodes.InvalidDateFormat);
     }
     const day: number = parseInt(parts[0], 10);
     const month: number = parseInt(parts[1], 10) - 1;
@@ -13,7 +15,7 @@ export class DateHelper {
     const date = new Date(year, month, day);
 
     if (isNaN(date.getTime())) {
-      throw new BadRequestException('Invalid generated date', 'InvalidGeneratedDate');
+      throw new BadRequestException(SystemErrorMessages.InvalidGeneratedDate, SystemErrorCodes.InvalidGeneratedDate);
     }
 
     return date;
@@ -35,5 +37,11 @@ export class DateHelper {
     const result = new Date(date);
     result.setDate(result.getDate() + days);
     return result;
+  }
+
+  static formatDateOnly(date: any): Date {
+    const newDate = new Date(date);
+    newDate.setHours(0, 0, 0, 0);
+    return newDate;
   }
 }
